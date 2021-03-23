@@ -1,7 +1,13 @@
-﻿namespace Uplift.DataAccess.Data.Repository.IRepository
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using Uplift.Models;
+
+namespace Uplift.DataAccess.Data.Repository.IRepository
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IRepository<Category>
     {
-        
+        IEnumerable<SelectListItem> GetCategoryListForDropDown();
+
+        void Update(Category category);
     }
 }
