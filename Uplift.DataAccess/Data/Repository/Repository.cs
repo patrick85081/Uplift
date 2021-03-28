@@ -8,13 +8,13 @@ namespace Uplift.DataAccess.Data.Repository
 {
     public class Repository<T> : IRepository.IRepository<T> where T : class
     {
-        protected readonly DbContext Context;
+        protected readonly DbContext Db;
         internal DbSet<T> dbSet;
 
-        public Repository(DbContext context)
+        public Repository(DbContext db)
         {
-            Context = context;
-            this.dbSet = context.Set<T>();
+            Db = db;
+            this.dbSet = db.Set<T>();
         }
 
         public void Add(T entity)
