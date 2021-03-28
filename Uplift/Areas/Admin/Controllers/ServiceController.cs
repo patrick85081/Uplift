@@ -56,7 +56,8 @@ namespace Uplift.Areas.Admin.Controllers
                 {
                     //New Service
                     string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(webRootPath, @"images\services");
+                    var uploads = Path.Combine(webRootPath, @"Uploads\Services");
+                    if (!Directory.Exists(uploads)) Directory.CreateDirectory(uploads);
                     var extension = Path.GetExtension(files[0].FileName);
 
                     using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
@@ -64,7 +65,7 @@ namespace Uplift.Areas.Admin.Controllers
                         files[0].CopyTo(fileStreams);
                     }
 
-                    ServVM.Service.ImageUrl = @"\images\services\{fileName}{extension}";
+                    ServVM.Service.ImageUrl = $@"\Uploads\Services\{fileName}{extension}";
 
                     _unitOfWork.Service.Add(ServVM.Service);
                 }
@@ -75,7 +76,7 @@ namespace Uplift.Areas.Admin.Controllers
                     if (files.Count > 0)
                     {
                         string fileName = Guid.NewGuid().ToString();
-                        var uploads = Path.Combine(webRootPath, @"images\services");
+                        var uploads = Path.Combine(webRootPath, @"Uploads\Services");
                         var extension_new = Path.GetExtension(files[0].FileName);
 
                         var imagePath = Path.Combine(webRootPath, serviceFromDb.ImageUrl.TrimStart('\\'));
@@ -88,7 +89,7 @@ namespace Uplift.Areas.Admin.Controllers
                         {
                             files[0].CopyTo(fileStreams);
                         }
-                        ServVM.Service.ImageUrl = @"\images\services\{fileName}{extension_new}";
+                        ServVM.Service.ImageUrl = $@"\Uploads\Services\{fileName}{extension_new}";
                     }
                     else
                     {
@@ -106,6 +107,27 @@ namespace Uplift.Areas.Admin.Controllers
                 ServVM.FrequencyList = _unitOfWork.Frequency.GetFrequencyListForDropDown();
                 return View(ServVM);
             }
+        }
+        
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var serviceFromDb = _unitOfWork.Service.Get(id);
+            string webRootPath = _hostEnvironment.WebRootPath;
+            var imagePath = Path.Combine(webRootPath, serviceFromDb.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+
+            if (serviceFromDb == null)
+            {
+                return Json(new { success = false, message = "Error while deleting." });
+            }
+
+            _unitOfWork.Service.Remove(serviceFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Deleted Successfully." });
         }
 
         #region API Calls
