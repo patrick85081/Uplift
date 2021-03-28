@@ -17,5 +17,10 @@ namespace Uplift.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult Upsert()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
