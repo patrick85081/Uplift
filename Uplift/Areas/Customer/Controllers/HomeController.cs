@@ -42,9 +42,11 @@ namespace Uplift.Controllers
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
 
-        public IActionResult Details()
+        public IActionResult Details(int id)
         {
-            return View();
+            var serviceFromDb = unitOfWork.Service
+                .GetFirstOrDefault(includeProperties: "Category,Frequency", filter: c => c.Id == id);
+            return View(serviceFromDb);
         }
     }
 }
