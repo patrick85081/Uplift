@@ -55,7 +55,7 @@ namespace Uplift.Controllers
         public IActionResult AddToCart(int serviceId)
         {
             var sessionList = new List<int>();
-            if (HttpContext.Session.IsExist(SD.SessionCart))
+            if (!HttpContext.Session.IsExist(SD.SessionCart))
             {
                 sessionList.Add(serviceId);
                 HttpContext.Session.SetObject(SD.SessionCart, sessionList);

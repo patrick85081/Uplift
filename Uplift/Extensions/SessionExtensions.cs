@@ -7,7 +7,7 @@ namespace Uplift.Extensions
     public static class SessionExtensions
     {
         public static bool IsExist(this ISession session, string key) =>
-            session.Get(key) != null;
+            session.GetString(key) != null;
         public static void SetObject(this ISession session, string key, object value) =>
             session.SetString(key, JsonConvert.SerializeObject(value));
 
