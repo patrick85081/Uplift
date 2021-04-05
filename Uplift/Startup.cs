@@ -64,6 +64,13 @@ namespace Uplift
                 app.UseHsts();
             }
 
+            app.ApplicationServices
+                .CreateScope()
+                .ServiceProvider
+                .GetService<ApplicationDbContext>()
+                .Database
+                .EnsureCreated();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
