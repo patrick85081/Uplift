@@ -41,6 +41,23 @@ namespace Uplift.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Summary()
+        {
+            if (HttpContext.Session.GetObject<List<int>>(SD.SessionCart) != null)
+            {
+                var sessionList = HttpContext.Session.GetObject<List<int>>(SD.SessionCart);
+                foreach (var serviceId in sessionList)
+                {
+                    CartVM.ServiceList
+                        .Add(unitOfWork.Service.GetFirstOrDefault(
+                            u => u.Id == serviceId,
+                            includeProperties: "Frequency,Category"));
+                }
+
+            }
+            return View(CartVM);
+        }
         
         public IActionResult Remove(int serviceId)
         {
